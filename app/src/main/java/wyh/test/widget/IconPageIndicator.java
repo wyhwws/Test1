@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 
 import java.util.jar.Attributes;
 
@@ -27,7 +28,7 @@ public class IconPageIndicator extends HorizontalScrollView implements PageIndic
         super(context,attrs);
        setHorizontalFadingEdgeEnabled(false);
        mIconsLayout = new IcsLinearLayout(context, R.attr.vpiIconPageIndicatorStyle);
-       addView(mIconsLayout,new LayoutParams(ViewPager.LayoutParams.WRAP_CONTENT,ViewPager.LayoutParams.MATCH_PARENT,Gravity.CENTER))
+       addView(mIconsLayout,new LayoutParams(ViewPager.LayoutParams.WRAP_CONTENT,ViewPager.LayoutParams.MATCH_PARENT,Gravity.CENTER));
     }
     private void animateToIcon(final int position){
         final View iconView = mIconsLayout.getChildAt(position);
@@ -102,6 +103,55 @@ public class IconPageIndicator extends HorizontalScrollView implements PageIndic
 
     @Override
     public void notifyDataSetChanged() {
-        m
+        mIconsLayout.removeAllViews();
+        IconPagerAdapter iconAdapter = (IconPagerAdapter) mViewPager.getAdapter();
+        int count = iconAdapter.getCount();
+        for (int i=0;i<count;i++){
+            ImageView view = new ImageView(getContext(),null,R.attr.vpiIconPageIndicatorStyle);
+            final int j = i;
+            view.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setCurrentItem(j);
+                }
+            });
+            mIconsLayout.addView(view);
+
+        }
+        if (mSelectdIndex > count){
+            mSelectdIndex = count-1;
+        }
+        setCurrentItem(mSelectdIndex);
+        requestLayout();
+    }
+
+    @Override
+    public void setViewPager(ViewPager view, int initialPosition) {
+        setViewPager(view);
+        setCurrentItem(initialPosition);
+    }
+
+    @Override
+    public void setCurrentItem(int item) {
+        if (mViewPager == null){
+            throw new IllegalStateException("ViewPager has not been bound.");
+        }
+        mSelectdIndex = item;
+        mViewPager.setCurrentItem(item);
+        int tabCount = mIconsLayout.getChildCount();
+        for (int i=0;i<tabCount;i++){
+            View child = mIconsLayout.getChildAt(i);
+            boolean isSelected =(i==item);
+            child.setSelected(isSelected);
+            if (isSelected){
+                animateToIcon(item);
+            }
+
+        }
+    }
+
+    @Override
+    public void setOnPageChangeListener(ViewPager.OnPageChangeListener listener) {
+        mListener = listener;
     }
 }
