@@ -1,7 +1,10 @@
 package wyh.test;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.view.Window;
 import android.widget.TextView;
 
 import java.util.Timer;
@@ -22,4 +25,12 @@ public class MainTabActivity extends FragmentActivity {
      private static TimerTask task;
      private static boolean isExit = false;
      private static boolean hasTast = false;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_main_tab);
+        mtc =new MainTabController(conte)
+    }
 }
