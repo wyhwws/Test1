@@ -19,6 +19,12 @@
         <activity
             android:name=".MainTabActivity"
             android:label="匀中" />
+        <activity
+            android:name=".MoreDetailsActivity"
+            android:label="匀中" />
+        <activity
+            android:name=".ClassicsActivity"
+            android:label="匀中" />
     </application>
 
 </manifest>

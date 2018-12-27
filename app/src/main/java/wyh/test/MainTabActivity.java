@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.view.KeyEvent;
 import android.view.Window;
 import android.widget.TextView;
 
@@ -15,7 +16,7 @@ import wyh.test.adapter.MainTabPagerAdapter;
 import wyh.test.controller.MainTabController;
 import wyh.test.widget.IconPageIndicator;
 
-public class MainTabActivity extends FragmentActivity implements MoreListFragment.Callbacks,ClassicsListFragment.Callbacks{
+public class MainTabActivity extends FragmentActivity implements MoreListFragment.Callbacks, ClassicsListFragment.Callbacks {
     private ViewPager main_tab_pager;
     private IconPageIndicator main_tab_icon_indicator;
 
@@ -36,9 +37,13 @@ public class MainTabActivity extends FragmentActivity implements MoreListFragmen
         mtc = new MainTabController(this);
         main_tab_pager = (ViewPager) findViewById(R.id.main_tab_pager);
 
+
         main_tab_icon_indicator = (IconPageIndicator) findViewById(R.id.main_tab_icon_indicator);
+
         mtpa = mtc.getPagerAdapter(getSupportFragmentManager());
+        main_tab_pager.setAdapter(mtpa);
         main_tab_icon_indicator.setViewPager(main_tab_pager);
+
         int page = getIntent().getIntExtra("page", -1);
         if (page < 0) {
             switchPage(0);
@@ -72,11 +77,31 @@ public class MainTabActivity extends FragmentActivity implements MoreListFragmen
                 intent.putExtra("position", position);
                 break;
             case 3:
-                default:break;
+                intent = new Intent(this, ShareSettingActivity.class);
+                break;
+            default:
+                break;
         }
-        if (intent!=null){
+        if (intent != null) {
             startActivity(intent);
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK){
+            if (isExit == false){
+                isExit =true;
+
+                if (!hasTast){
+                    tExit.schedule(task,2000);
+
+                }else {
+                    finish();
+                }
+            }
+        }
+        return false;
     }
 
     private ViewPager.OnPageChangeListener getOnPageChangeListener() {
@@ -101,8 +126,8 @@ public class MainTabActivity extends FragmentActivity implements MoreListFragmen
 
     @Override
     public void onClassicsIdSelected(int classicsId) {
-        Intent intent = new Intent(this,ClassicsActivity.class);
-        intent.putExtra("QuestionId",classicsId);
+        Intent intent = new Intent(this, ClassicsActivity.class);
+        intent.putExtra("questionId", classicsId);
         startActivity(intent);
     }
 }
