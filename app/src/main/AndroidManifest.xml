@@ -16,6 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".MainTabActivity"
+            android:label="匀中" />
     </application>
 
 </manifest>
